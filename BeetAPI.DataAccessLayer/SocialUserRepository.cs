@@ -33,7 +33,7 @@ namespace BeetAPI.DataAccessLayer
 
         public  SocialUser Get(string email)
         {
-            var user = db.SocialUsers.Where(a => a.Email == email).First();
+            var user = db.SocialUsers.Where(a => a.Email == email).FirstOrDefault();
             return user;
         }
 

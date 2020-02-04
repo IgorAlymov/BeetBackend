@@ -10,8 +10,8 @@ namespace BeetAPI.Domain
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string Email { get; set; }
-        public int  AvatarPhotoId { get; set; }
-        public DateTime Birthday { get; set; }
+        public int? AvatarPhotoId { get; set; }
+        public DateTime? Birthday { get; set; }
         public string Password { get; set; }
         public string Gender { get; set; }
         public string PhoneNumber { get; set; }
@@ -22,8 +22,6 @@ namespace BeetAPI.Domain
         public  ICollection<Post> UserPosts { get; set; }
         public  ICollection<LikeComment> LikesComments { get; set; }
         public  ICollection<LikePost> LikesPosts { get; set; }
-        //public  ICollection<SocialUser> Friends { get; set; }
-        //public  ICollection<UserGroup> Groups { get; set; }
         public  ICollection<Comment> Comments { get; set; }
         public  ICollection<Message> MessageAuthor { get; set; }
         public  ICollection<Message> MessageReceiver { get; set; }

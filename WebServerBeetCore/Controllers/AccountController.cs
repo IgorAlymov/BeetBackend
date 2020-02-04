@@ -25,7 +25,7 @@ namespace WebServerBeetCore.Controllers
         {
             _db = rep;
         }
-        //
+        
         [HttpPost("SignIn")]
         public async Task<IActionResult> SignIn([FromBody]SocialUser user)
         {
@@ -58,7 +58,7 @@ namespace WebServerBeetCore.Controllers
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }
-        //
+        
         [Route("SignOut")]
         public async Task<IActionResult> SignOut()
         {
@@ -66,20 +66,26 @@ namespace WebServerBeetCore.Controllers
             return Ok();
         }
 
-        //
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody]SocialUser user)
         {
+            var userExist = _db.Get(user.Email);
             try
             {
-                _db.Create(user);
-                _db.Save();
-                await Authenticate(user);
-                return Ok();
+                if (userExist == null)
+                {
+                    user.AvatarPhotoId = 83;
+                    _db.Create(user);
+                    _db.Save();
+                    await Authenticate(user);
+                    return Ok();
+                }
+                else
+                    return BadRequest("This email already exists");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return ValidationProblem();
+                return BadRequest(e);
             }
         }
 

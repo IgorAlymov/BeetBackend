@@ -35,53 +35,50 @@ namespace WebServerBeetCore.Controllers
             var allUser = users.Where(a => a.SocialUserId != id);
             return allUser;
         }
-        //
-        [Route("getCountPhotoUser/{id}")]
-        public IEnumerable<Photo> GetCountPhotoUser(int id)
+        
+        [Route("GetUserAvatar")]
+        public IActionResult GetUserAvatar()
         {
-            var photo = _dbPhoto.GetPhotosUser(id);
-            return photo;
-        }
-        //
-        [Route("getuseravatar/{id}")]
-        public IActionResult GetUserAvatar(int id)
-        {
-            var user = _dbUser.Get(id);
+            string emailUser = User.Identity.Name;
+            var user = _dbUser.Get(emailUser);
             if (user == null) return NotFound();
 
             int idAvatar = (int)user.AvatarPhotoId;
             var avatar = _dbPhoto.GetAvatar(idAvatar);
-            
+
             return Ok(new {
                 avatarUrl = Path.Combine("http://localhost:5001", avatar.Path)
             });
         }
-        //
-        [Route("getAllUserPhoto/{id}/{idU}")]
-        public IActionResult GetAllUserPhoto(int id, int idU)
+        
+        [Route("GetAllUserPhoto")]
+        public IActionResult GetAllUserPhoto()
         {
-            string listPhoto = null;
-            var photos = _dbPhoto.GetPhotosUser(idU);
+            List<string> listPhoto =new List<string>();
+            string emailUser = User.Identity.Name;
+            var user = _dbUser.Get(emailUser);
+            var photos = _dbPhoto.GetPhotosUser(user.SocialUserId);
             if (photos != null)
             {
                 foreach (var item in photos)
                 {
-                    if (item.PhotoId == id)
-                    {
-                        listPhoto=Path.Combine("http://localhost:5001", item.Path);
-                    }
+                    listPhoto.Add(Path.Combine("http://localhost:5001", item.Path));
                 }
-                return Ok(listPhoto);
+                return Ok(new
+                {
+                    listPhoto
+                });
             }
             else
                 return NotFound();
         }
-        //
-        [HttpPost("PostUserPhoto/{id}")]
-        public async Task<IActionResult> PostUserPhoto(int id, [FromForm]UploadFileModel model)
+        
+        [HttpPost("PostUserPhoto")]
+        public async Task<IActionResult> PostUserPhoto([FromForm] UploadFileModel model)
         {
             if (!ModelState.IsValid) return BadRequest();
-            var lastUser = _dbUser.Get(id);
+            string emailUser = User.Identity.Name;
+            var lastUser = _dbUser.Get(emailUser);
             try
             {
                 string path = Path.Combine("Files", model.File.FileName);
@@ -107,12 +104,13 @@ namespace WebServerBeetCore.Controllers
                 return BadRequest();
             }
         }
-        //
-        [HttpPost("PostAddPhoto/{id}")]
-        public async Task<IActionResult> PostAddPhoto(int id, [FromForm]UploadFileModel model)
+        
+        [HttpPost("PostAddPhoto")]
+        public async Task<IActionResult> PostAddPhoto([FromForm]UploadFileModel model)
         {
             if (!ModelState.IsValid) return BadRequest();
-            var lastUser = _dbUser.Get(id);
+            string emailUser = User.Identity.Name;
+            var lastUser = _dbUser.Get(emailUser);
             try
             {
                 string path = Path.Combine("Files", model.File.FileName);
@@ -135,13 +133,23 @@ namespace WebServerBeetCore.Controllers
                 return BadRequest();
             }
         }
-        //
-        [HttpGet("getActiveUser")]
+        
+        [HttpGet("GetActiveUser")]
         public SocialUser GetActiveUser()
         {
             string emailUser = User.Identity.Name;
             var user = _dbUser.Get(emailUser);
             return user;
+        }
+
+        [Route("GetRemovePhoto/{text}")]
+        public IActionResult GetRemovePhoto(string text)
+        {
+            string path = text.Remove(0,1);
+            Photo photoRemove = _dbPhoto.Get(path);
+            _dbPhoto.Delete(photoRemove);
+            _dbPhoto.Save();
+            return Ok();
         }
     }
 }

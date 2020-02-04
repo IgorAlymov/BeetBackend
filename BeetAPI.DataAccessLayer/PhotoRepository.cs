@@ -31,15 +31,15 @@ namespace BeetAPI.DataAccessLayer
             return db.Photos.Find(id);
         }
 
+        public Photo Get(string path)
+        {
+            return db.Photos.FirstOrDefault(p => p.Path == path);
+        }
+
         public IEnumerable<Photo> GetPhotosUser(int id)
         {
             return db.Photos.Where(p => p.PhotoUsers.SocialUserId == id).ToList();
         }
-        /*
-        public IEnumerable<Photo> GetPhotoGroup()
-        {
-            return db.Photos.Where(b => b.GroupCover != null);
-        }*/
 
         public Photo GetAvatar(int idAvatar)
         {
