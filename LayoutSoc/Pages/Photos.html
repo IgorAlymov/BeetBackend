@@ -1,0 +1,309 @@
+﻿<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="Lib/angular-material.min.css" rel="stylesheet" />
+
+    <style>
+        /*размер текста*/
+        .mat-tab-min-max {
+            font-size: 11px !important;
+        }
+
+        .mat-tab-max {
+            font-size: 473px !important;
+        }
+
+        .mat-tab-average {
+            font-size: 15px !important;
+        }
+        /*input фото*/
+        .inputfile {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+
+            .inputfile + label {
+                font-size: 1.25em;
+                font-weight: 700;
+                color: white;
+                background-color: black;
+                display: inline-block;
+            }
+
+                .inputfile:focus + label,
+                .inputfile + label:hover {
+                    background-color: red;
+                }
+
+            .inputfile + label {
+                cursor: pointer; /* "hand" cursor */
+            }
+
+        .grayCol {
+            color: gray;
+        }
+        /*размер текста*/
+        .mat-tab-min-max {
+            font-size: 11px !important;
+        }
+
+        .mat-tab-min {
+            font-size: 13px !important;
+        }
+
+        .mat-tab-average {
+            font-size: 15px !important;
+        } 
+        /*масштабирование картинки*/
+        body {
+            height: 100%;
+        }
+
+        .table {
+            display: table;
+            width: 100%;
+            height: 100%;
+        }
+
+        .table__cell {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        /*мню*/
+        .menudemoBasicUsage .md-menu-demo {
+            padding: 24px;
+        }
+
+        .menudemoBasicUsage .menu-demo-container {
+            min-height: 200px;
+        }
+        /*кольца*/
+        .progressCirculardemoBasicUsage body {
+            padding: 20px;
+        }
+
+        .progressCirculardemoBasicUsage h4 {
+            margin: 10px 0;
+        }
+
+        .progressCirculardemoBasicUsage md-progress-circular {
+            margin-bottom: 20px;
+        }
+
+        .progressCirculardemoBasicUsage #loaders > md-switch {
+            margin: 0;
+            margin-left: 10px;
+            margin-top: -10px;
+        }
+
+        .progressCirculardemoBasicUsage #loaders > h5 {
+            margin-top: 0;
+        }
+
+        .progressCirculardemoBasicUsage #loaders > p {
+            margin-right: 20px;
+            margin-bottom: 24px;
+        }
+
+        .progressCirculardemoBasicUsage p.small {
+            font-size: 0.8em;
+            margin-top: -18px;
+        }
+
+        .progressCirculardemoBasicUsage hr {
+            width: 100%;
+            margin-top: 20px;
+            border-color: rgba(221, 221, 177, 0.1);
+        }
+
+        .progressCirculardemoBasicUsage p.small > code {
+            font-size: 0.8em;
+        }
+
+        .progressCirculardemoBasicUsage .visible {
+            border-color: rgba(221, 221, 177, 0);
+        }
+        /*диалоги*/
+        .dialogdemoBasicUsage #popupContainer {
+            position: relative;
+        }
+
+        .dialogdemoBasicUsage .footer {
+            width: 100%;
+            text-align: center;
+            margin-left: 20px;
+        }
+
+            .dialogdemoBasicUsage .footer, .dialogdemoBasicUsage .footer > code {
+                font-size: 0.8em;
+                margin-top: 50px;
+            }
+
+        .dialogdemoBasicUsage button {
+            width: 200px;
+        }
+
+        .dialogdemoBasicUsage div#status {
+            color: #c60008;
+        }
+
+        .dialogdemoBasicUsage .dialog-demo-prerendered md-checkbox {
+            margin-bottom: 0;
+        }
+
+        /*----------------------*/
+        .toastdemoBasicUsage .spacer {
+            width: 50px;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .colorsdemoThemePicker .section {
+            font-size: 12px;
+            padding: 16px;
+            font-weight: bold;
+        }
+
+        .colorsdemoThemePicker .line {
+            padding: 16px;
+        }
+
+        .colorsdemoThemePicker .primary, .colorsdemoThemePicker .accent {
+            margin: 4px 0;
+            height: 120px;
+        }
+
+        .colorsdemoThemePicker [md-colors] {
+            transition: all 0.3s cubic-bezier(0.35, 0, 0.25, 1);
+        }
+
+        .colorsdemoThemePicker p.footnote {
+            font-size: 0.85em;
+            margin: 30px;
+            padding: 5px;
+            background-color: rgba(205, 205, 205, 0.45);
+        }
+
+        .colorsdemoThemePicker .componentTag {
+            font-weight: bolder;
+            font-size: 1.2em;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+
+<body ng-cloak>
+    <div class="md-menu-demo" ng-controller="AppCtrl as ctrl">
+        <div>
+            <div style="min-width:420px">
+                <div >
+                    <div layout="row">
+                        <!--альбомы-->
+                        <div > 
+                            <md-card  layout-padding style="height:auto;width:600px">
+                                <div style="margin-left:20px;height:40px" layout="row">
+                                    <h3 style="margin-top:5px;width:auto">Мои альбомы</h3>
+                                    <label style="margin-top:10px;width:20px;margin-left:10px">1</label>
+                                </div>
+                                <md-divider></md-divider>
+                                <md-card-content layout="row">
+                                    <div layout="column" flex="33">
+                                        <md-button style="height:200px">
+                                            <div style="width:150%">
+                                                <img style="height:190%;width:190%;margin-left:-30px;" src="{{activeUserAvatarImage}}" />
+                                            </div>
+                                        </md-button>
+                                        <label style="margin-left:10px" class="mat-tab-average"> Мои фотографии</label>
+                                    </div>
+                                </md-card-content>
+                            </md-card>
+                            <!--мои фотографии-->
+                            <md-card  layout-padding style="height:auto;width:600px">
+                                <div style="margin-left:20px;height:40px" layout="row">
+                                    <h3 style="margin-top:5px;width:auto">Мои фотографии</h3>
+                                    <label style="margin-top:10px;width:20px;margin-left:10px">{{countPhotos.length}}</label>
+                                </div>
+                                <md-divider></md-divider>
+
+                                <md-card-content layout="row">
+                                    <div ng-repeat="photo in allPhotosUser" layout="column" flex="50">
+                                        <md-button>
+                                            <div style="width:150%">
+                                                <img style="height:190%;width:190%;margin-left:-30px;" src="{{photo}}" />
+                                            </div>
+                                        </md-button>
+                                    </div>
+                                </md-card-content>
+
+                            </md-card>
+                        </div>
+
+                        <div >
+                            <div style="height:335px" layout="row">
+                                <md-card>
+                                    <div style="margin-left:20px;height:48px" layout="row">
+                                        <h3 style="margin-top:20px;width:auto">Выбрать фото</h3>
+                                    </div>
+                                    <md-divider></md-divider>
+                                    <md-card-content layout="row">
+                                        <md-card-title-media>
+                                            <md-button ng-show="showAvatarBall" style="height:150px;width:150px" class="md-fab md-primary" aria-label="Profile">
+                                                <div style="height:200%;width:200%;margin-left:-15px">
+                                                    <img src="{{imageSrc}}" />
+                                                </div>
+                                            </md-button>
+                                            <md-button ng-show="showAvatarBallInput" for="file" style="height:150px;width:150px" class="md-fab md-primary" aria-label="Profile">
+                                                <div style="margin-top:100px">
+                                                    <label for="file" class="mat-tab-max" style="height:400px;width:400px;margin-left:-100px;margin-top:400px;margin-bottom:-100px">O</label>
+                                                </div>
+                                            </md-button>
+                                        </md-card-title-media>
+
+                                    </md-card-content>
+                                    <form>
+                                        <input class="inputfile"
+                                               type="file"
+                                               name="file"
+                                               id="file"
+                                               ng-click="inputAvatar()"
+                                               ng-file-select="onFileSelect($files)"
+                                               ng-model="imageSrc"
+                                               onchange="angular.element(this).scope().rememberFile(this.files)" />
+                                    </form>
+                                    <md-button style="margin-top:-10px" class=" md-primary" ng-click="sendAddImage(activeUser.socialUserId);getAllPhotos(activeUser.socialUserId);">Добавить</md-button>
+                                </md-card>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script src="Lib/angular.min.js"></script>
+    <script src="Lib/angular-route.min.js"></script>
+    <script src="Lib/angular-animate.min.js"></script>
+    <script src="Lib/angular-aria.min.js"></script>
+    <script src="Lib/angular-messages.min.js"></script>
+    <script src="MainMMC.js"></script>
+</body>
+</html>

@@ -1,0 +1,323 @@
+﻿<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="Lib/angular-material.min.css" rel="stylesheet" />
+
+    <style>
+        /*текст*/
+        .mat-tab-min-max {
+            font-size: 11px !important;
+        }
+
+        .mat-tab-min {
+            font-size: 13px !important;
+        }
+
+        .mat-tab-average {
+            font-size: 15px !important;
+        } 
+        /*масштабирование картинки*/
+        body {
+            height: 100%;
+        }
+
+        .table {
+            display: table;
+            width: 100%;
+            height: 100%;
+        }
+
+        .table__cell {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        /*мню*/
+        .menudemoBasicUsage .md-menu-demo {
+            padding: 24px;
+        }
+
+        .menudemoBasicUsage .menu-demo-container {
+            min-height: 200px;
+        }
+        /*кольца*/
+        .progressCirculardemoBasicUsage body {
+            padding: 20px;
+        }
+
+        .progressCirculardemoBasicUsage h4 {
+            margin: 10px 0;
+        }
+
+        .progressCirculardemoBasicUsage md-progress-circular {
+            margin-bottom: 20px;
+        }
+
+        .progressCirculardemoBasicUsage #loaders > md-switch {
+            margin: 0;
+            margin-left: 10px;
+            margin-top: -10px;
+        }
+
+        .progressCirculardemoBasicUsage #loaders > h5 {
+            margin-top: 0;
+        }
+
+        .progressCirculardemoBasicUsage #loaders > p {
+            margin-right: 20px;
+            margin-bottom: 24px;
+        }
+
+        .progressCirculardemoBasicUsage p.small {
+            font-size: 0.8em;
+            margin-top: -18px;
+        }
+
+        .progressCirculardemoBasicUsage hr {
+            width: 100%;
+            margin-top: 20px;
+            border-color: rgba(221, 221, 177, 0.1);
+        }
+
+        .progressCirculardemoBasicUsage p.small > code {
+            font-size: 0.8em;
+        }
+
+        .progressCirculardemoBasicUsage .visible {
+            border-color: rgba(221, 221, 177, 0);
+        }
+        /*диалоги*/
+        .dialogdemoBasicUsage #popupContainer {
+            position: relative;
+        }
+
+        .dialogdemoBasicUsage .footer {
+            width: 100%;
+            text-align: center;
+            margin-left: 20px;
+        }
+
+            .dialogdemoBasicUsage .footer, .dialogdemoBasicUsage .footer > code {
+                font-size: 0.8em;
+                margin-top: 50px;
+            }
+
+        .dialogdemoBasicUsage button {
+            width: 200px;
+        }
+
+        .dialogdemoBasicUsage div#status {
+            color: #c60008;
+        }
+
+        .dialogdemoBasicUsage .dialog-demo-prerendered md-checkbox {
+            margin-bottom: 0;
+        }
+
+        /*----------------------*/
+        .toastdemoBasicUsage .spacer {
+            width: 50px;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .colorsdemoThemePicker .section {
+            font-size: 12px;
+            padding: 16px;
+            font-weight: bold;
+        }
+
+        .colorsdemoThemePicker .line {
+            padding: 16px;
+        }
+
+        .colorsdemoThemePicker .primary, .colorsdemoThemePicker .accent {
+            margin: 4px 0;
+            height: 120px;
+        }
+
+        .colorsdemoThemePicker [md-colors] {
+            transition: all 0.3s cubic-bezier(0.35, 0, 0.25, 1);
+        }
+
+        .colorsdemoThemePicker p.footnote {
+            font-size: 0.85em;
+            margin: 30px;
+            padding: 5px;
+            background-color: rgba(205, 205, 205, 0.45);
+        }
+
+        .colorsdemoThemePicker .componentTag {
+            font-weight: bolder;
+            font-size: 1.2em;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+
+<body ng-cloak>
+    <div class="md-menu-demo" ng-controller="AppCtrl as ctrl">
+        <div layout="row">
+            <div flex="70" style="min-width:420px;max-width:600px">
+                <md-card>
+                </md-card>
+                <!--шапка диалога-->
+                <md-card style="margin-top:-7px;height:50px ">
+                    <md-input-container md-no-float class="md-block" style="margin-top:25px">
+                        <div layout="row">
+                            <div flex="40">
+
+                                <md-button style="margin-top:-20px" ng-click="getFriends(activeUser.socialUserId);btnLoadFriend()">
+                                    <md-icon md-svg-src="img/icons/arrowleft.svg"></md-icon>
+                                    Назад
+                                </md-button>
+                            </div>
+                            <div flex="35">
+                                <h5 style="margin-top:-10px">{{friendMes.firstname }} {{friendMes.lastname }}</h5>
+                            </div>
+                            <div flex="10">
+                                <md-icon style="margin-top:-30px;margin-left:15px" md-svg-src="img/icons/magnifier.svg"></md-icon>
+
+
+                            </div>
+                            <div flex="15">
+                                <div class="md-media-sm card-media" layout style="height:35px;width:60px;margin-top:-30px">
+                                    <md-button style="height:40px;width:40px" class="md-fab md-primary" md-theme="cyan" aria-label="Profile">
+                                        <div style="height:330%;width:330%;margin-left:-30px;margin-top:-20px">
+                                            <img src="{{friendMesPh}}" />
+                                        </div>
+                                    </md-button>
+                                </div>
+                            </div>
+                        </div>
+                    </md-input-container>
+                </md-card>
+                <!--диалог-->
+
+                <md-content style="height: 600px;margin-top:-7px">
+                    <md-card style="margin-top:-5px">
+                        <section>
+                            <md-list layout-padding>
+                                <br />
+                                <md-list-item ng-repeat="message in messages" class="md-3-line">
+                                    <div class="md-list-item-text" layout="row">
+                                        <div class="md-media-sm card-media" layout style="height:75px;width:70px;margin-top:0px">
+                                            <md-button style="height:50px;width:50px" class="md-fab md-primary" md-theme="cyan" aria-label="Profile">
+                                                <div style="height:220%;width:220%;margin-left:-30px;margin-top:-5px">
+                                                    <img src="{{message.image}}" />
+                                                </div>
+                                            </md-button>
+                                        </div>
+
+                                        <div>
+                                            <label>{{message.name}}</label>
+                                            <br />
+                                            <label class="mat-tab-min">
+                                                {{message.text}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </md-list-item>
+                                <br />
+                                <br />
+                                <!--
+    <md-list-item class="md-3-line">
+        <div class="md-list-item-text" layout="row">
+            <div class="md-media-sm card-media" layout style="height:75px;width:70px;margin-top:0px">
+                <md-button style="height:50px;width:50px" class="md-fab md-primary" md-theme="cyan" aria-label="Profile">
+                    <div style="height:220%;width:220%;margin-left:-30px;margin-top:-5px">
+                        <img src="../img/imageFrinds/Я.jpg" />
+                    </div>
+                </md-button>
+            </div>
+
+            <div>
+                <label> Игорь </label> <p class="mat-tab-min">14:14</p>
+                <br />
+                <label class="mat-tab-min">
+                    Здарова!
+                </label>
+                <br />
+                <br />
+                <label class="mat-tab-min"> сегодня уже просит вернуться обратно </label>
+            </div>
+        </div>
+    </md-list-item>
+    <br />
+    <br />-->
+
+                            </md-list>
+                        </section>
+                    </md-card>
+
+                </md-content>
+                <div style="margin-top:-5px">
+                    <md-card style="height:40px;width:560px" layout="row">
+
+                        <md-input-container md-no-float class="md-block" flex="70">
+                            <input required style="margin-top:-10px" ng-model="outcomeMessage" />
+                        </md-input-container>
+                        <md-button ng-click="sendToServer(outcomeMessage)"
+                                   style="margin-top:2px"
+                                   flex="30"
+                                   class="md-primary"
+                                   md-colors="{background: 'indigo'}"
+                                   md-theme="cyan"
+                                   aria-label="Profile">
+                            Отправить
+                        </md-button>
+                    </md-card>
+
+                </div>
+            </div>
+
+            <div flex="30">
+                <md-card style="min-width:250px;max-width:250px">
+                    <md-toolbar class="md-menu-toolbar">
+                        <div layout="column">
+                            <div>
+                                <md-menu-bar>
+                                    <md-menu>
+                                        <button ng-click="">
+                                            Все сообщения
+                                        </button>
+                                    </md-menu>
+                                </md-menu-bar>
+                                <md-menu-bar>
+                                    <md-menu>
+                                        <button ng-click="">
+                                            Непрочитанные
+                                        </button>
+                                    </md-menu>
+                                </md-menu-bar>
+
+                            </div>
+                        </div>
+                    </md-toolbar>
+
+                </md-card>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script src="Lib/angular.min.js"></script>
+    <script src="Lib/angular-route.min.js"></script>
+    <script src="Lib/angular-animate.min.js"></script>
+    <script src="Lib/angular-aria.min.js"></script>
+    <script src="Lib/angular-messages.min.js"></script>
+    <script src="MainMMC.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="Lib/angular-material.min.css" rel="stylesheet" />
+</head>
+
+
+<body ng-controller="mainController">
+        <md-dialog style="height:600px;width:600px">
+            <form ng-cloak>
+                <md-toolbar>
+                    <div class="md-toolbar-tools">
+                        <span flex></span>
+                        <md-button class="md-icon-button" ng-click="cancel()">
+                            <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+                        </md-button>
+                    </div>
+                </md-toolbar>
+
+                <md-dialog-content>
+                    <div class="md-dialog-content center">
+                        <img style="margin: auto; max-width: 85%;"  src='/img/imageFrinds/Я.jpg'>
+                    </div>
+                </md-dialog-content>
+            </form>
+        </md-dialog>
+
+     <script src="Lib/angular.min.js"></script>
+    <script src="Lib/angular-route.min.js"></script>
+    <script src="Lib/angular-animate.min.js"></script>
+    <script src="Lib/angular-aria.min.js"></script>
+    <script src="Lib/angular-messages.min.js"></script>
+    <script src="Lib/angular-material.min.js"></script>
+    <script src="MainMMC.js"></script>
+</body>
+
+
+</html>

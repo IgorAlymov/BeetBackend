@@ -1,0 +1,461 @@
+﻿<!DOCTYPE html>
+
+<html  lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="Lib/angular-material.min.css" rel="stylesheet" />
+    <script src="/signalr/hubs" type="text/javascript"></script>
+    <style>
+        /*размер текста*/
+        .mat-tab-min-max {
+            font-size: 11px !important;
+        }
+
+        .mat-tab-max {
+            font-size: 473px !important;
+        }
+
+        .mat-tab-average {
+            font-size: 15px !important;
+        }
+        /*input фото*/
+        .inputfile {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+
+            .inputfile + label {
+                font-size: 1.25em;
+                font-weight: 700;
+                color: white;
+                background-color: black;
+                display: inline-block;
+            }
+
+                .inputfile:focus + label,
+                .inputfile + label:hover {
+                    background-color: red;
+                }
+
+            .inputfile + label {
+                cursor: pointer; /* "hand" cursor */
+            }
+
+        .grayCol {
+            color: gray;
+        }
+        .raz div {
+            max-width: 13em;
+            min-height: 2em;
+            margin-left: auto;
+            margin-right: 1em;
+        }
+        /*серый*/
+        .grayCol {
+            color: gray;
+        }
+        /*масштабирование картинки*/
+        body {
+            height: 100%;
+        }
+
+        .table {
+            display: table;
+            width: 100%;
+            height: 100%;
+        }
+
+        .table__cell {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        /*размер текста*/
+        .mat-tab-min-max {
+            font-size: 11px !important;
+        }
+        .mat-tab-min {
+            font-size: 13px !important;
+        }
+        .mat-tab-average {
+            font-size: 15px !important;
+        } 
+        .dialogdemoBasicUsage #popupContainer {
+            position: relative;
+        }
+
+        .dialogdemoBasicUsage .footer {
+            width: 100%;
+            text-align: center;
+            margin-left: 20px;
+        }
+
+            .dialogdemoBasicUsage .footer, .dialogdemoBasicUsage .footer > code {
+                font-size: 0.8em;
+                margin-top: 50px;
+            }
+
+        .dialogdemoBasicUsage button {
+            width: 200px;
+        }
+
+        .dialogdemoBasicUsage div#status {
+            color: #c60008;
+        }
+
+        .dialogdemoBasicUsage .dialog-demo-prerendered md-checkbox {
+            margin-bottom: 0;
+        }
+
+        CSS
+        HTMLJSCSS
+        .carddemoBasicUsage .card-media {
+            background-color: #999999;
+        }
+        /*центр*/
+        .center {
+            text-align: center;
+        }
+    </style>
+</head>
+
+
+
+<body ng-cloak>
+    <div class="md-menu-demo md-padding" ng-controller="AppCtrl as ctrl" id="popupContainer" ng-cloak>
+        <div layout="row">
+            <div layout="column">
+                <!--аватар-->
+                <md-card>
+                    <md-card-content layout="row" layout-align="space-between">
+                        <div class="md-media-xl"style="height:auto">
+                            <md-button style="margin:-5px -5px -5px -5px" ng-click="showAdvanced($event)">
+                                <div style="height:120%;width:120%">
+                                    <img style="margin-left:-10px" src="{{activeUserAvatarImage}}" />
+                                </div>
+                            </md-button>
+                        </div>
+                    </md-card-content>
+                </md-card>
+                <!--друзья-->
+                <md-card>
+                    <md-card-content>
+                        <div layout="row">
+                            <h5 style="height:1px;width:60px;margin-top:0">Друзья </h5>
+                            <label class="mat-tab-min" style="height:1px;margin-top:0"> {{allFriends.length}}</label>
+                        </div>
+
+                        <div layout="row">
+                            <md-card-title-media style="width:80px" ng-repeat="friend in allFriends">
+                                <div class="md-media-sm card-media" layout style="height:80px;width:70px">
+                                    <md-button style="height:55px;width:70px" class="md-fab md-primary" md-theme="cyan" aria-label="Profile">
+                                        <div style="height:200%;width:200%;margin-left:-10px">
+                                            <img src="{{friendsUsersAvatarPhoto[$index].avatarUrl}}" />
+                                        </div>
+                                    </md-button>
+                                </div>
+                                <label style="height:1px;width:100px;margin-left:15px" class="center mat-tab-min">{{friend.firstname}}</label>
+                            </md-card-title-media>
+
+                        </div>
+                    </md-card-content>
+                </md-card>
+                <!--группы-->
+                <md-card>
+                    <md-card-content>
+                        <div layout="row">
+                            <h5 style="height:1px;width:60px;margin-top:0">Группы </h5>
+                            <label class="mat-tab-min" style="height:1px;margin-top:0"> {{myGroups.length}}</label>
+                        </div>
+                        <div layout="column">
+                            <md-card-title-media ng-repeat="group in myGroups" style="width:200px" layout="row">
+                                <div class="md-media-sm card-media" layout style="height:70px;width:70px">
+                                    <md-button style="height:55px;width:70px" class="md-fab md-primary" md-theme="cyan" aria-label="Profile" ng-click="openActiveGroupMyGroups(group.Name);btnOpenGroup()">
+                                        <div style="height:200%;width:200%;margin-left:-20px;margin-top:-1px">
+                                            <img src="{{myGroupsImages[$index].avatarUrl}}" />
+                                        </div>
+                                    </md-button>
+                                </div>
+                                <label style="height:1px;width:500px;margin-left:15px;margin-top:10px" class="mat-tab-min">{{group.name}}</label>
+                            </md-card-title-media>
+                        </div>
+
+                    </md-card-content>
+                </md-card>
+                <!--фотоальбомы-->
+                <md-card >
+                    <md-card-content layout="column">
+                        <div layout="row">
+                            <h5 style="height:1px;margin-top:0">Фотоальбомы </h5>
+                            <label class="mat-tab-min" style="height:1px;margin-top:0;margin-left:10px"> 1</label>
+                        </div>
+                        <md-button style="height:200px;width:220px" ng-click="getAllPhotos(activeUser.SocialUserId);btnLoadPhotos();">
+
+                            <div style="width:150%">
+
+                                <img style="height:190%;width:190%;margin-left:-30px;" src="{{activeUserAvatarImage}}" />
+
+                            </div>
+                        </md-button>
+                        <label style="margin-left:10px" class="mat-tab-average"> Мой фотоальбом</label>
+                    </md-card-content>
+                </md-card>
+            </div>
+
+            <div loyout="column">
+                <!--инормаормация о пользователе-->
+                <md-card flex="65" layout-padding style="min-height:300px;max-width :500px">
+                    <div style="margin-left:20px;height:40px" layout="row">
+                        <div flex="70">
+                            <h3 style="margin-top:5px">{{activeUser.firstname}} {{activeUser.lastname}}</h3>
+                        </div>
+                        <div flex="30">
+                            <label class="grayCol" style="margin-left:60%" >online</label>
+                        </div>
+                    </div>
+
+                    <md-divider></md-divider>
+
+                    <md-card-content>
+                        <div layout="row">
+                            <md-card-title flex="30" layout="column" style="height:20px;margin-top:-30px">
+
+                                <md-card-title-text style="min-width:200px">
+                                    <label class="md-subhead description" href="">День рождения:</label>
+                                </md-card-title-text>
+
+                                <md-card-title-text style="margin-top:20px;min-width:200px">
+                                    <label class="md-subhead description" href="">Город:</label>
+                                </md-card-title-text>
+                            </md-card-title>
+                            <md-card-title flex="70" layout="column" style="margin-top:-45px;margin-right:100px">
+                                <h5 style="height:0px">{{activeUser.birthday | date:'MMM d'}}</h5>
+                                <h5 style="height:0px">{{activeUser.city}}</h5>
+                            </md-card-title>
+                        </div>
+                        <md-button style="width:485px;margin-left:-10px" ng-click="showDetailedInformations()">
+                            <label class=" md-subhead description mat-tab-min-max">Показать подробную информацию</label>
+                        </md-button>
+                        <div layout="row" ng-show="showDetailedInformation">
+                            <md-card-title flex="30" layout="column" style="margin-top:-30px">
+
+                                <md-card-title-text style="min-width:200px">
+                                    <label class="md-subhead description" href="">Пол:</label>
+                                </md-card-title-text>
+
+                                <md-card-title-text style="min-width:200px" >
+                                    <label class="md-subhead description" >Номер телефона:</label>
+                                </md-card-title-text>
+
+                                <md-card-title-text style="margin-top:20px;min-width:200px">
+                                    <label class="md-subhead description" href="">О себе:</label>
+
+                                </md-card-title-text>
+                            </md-card-title>
+                            <md-card-title flex="70" layout="column" style="margin-top:-45px;margin-right:100px">
+                                <h5 style="height:0px">{{activeUser.gender}}</h5>
+                                <h5>{{activeUser.phoneNumber}}</h5>
+                                <h5 style="width:300px">{{activeUser.aboutMe}}</h5>
+                            </md-card-title>
+                        </div>
+                    </md-card-content>
+
+                    <md-divider></md-divider>
+
+                    <md-card-content style="height:80px">
+                        <div layout="row">
+                            <md-card-title flex="50" layout="row" style="height:20px;margin-top:-30px">
+
+                                <md-card-title-text style="min-width:200px" class="center">
+                                    <div layout="column">
+                                        <md-button ng-click="getFriends(activeUser.socialUserId);btnLoadFriend()"
+                                                   class="md-fab md-mini" 
+                                                   style="margin-left:40%" 
+                                                   flex md-colors="{background: 'indigo'}">
+                                            {{allFriends.length}}
+                                        </md-button>
+                                        <label class="md-subhead description" href="">Друзья</label>
+                                    </div>
+                                </md-card-title-text>
+                            </md-card-title>
+
+                            <md-card-title flex="50" layout="row" style="height:20px;margin-top:-30px">
+                                <md-card-title-text style="min-width:200px">
+                                    <div layout="column">
+                                        <md-button ng-click="getAllPhotos(activeUser.socialUserId);btnLoadPhotos()" class="md-fab md-mini" style="margin-left:20px" flex md-colors="{background: 'indigo'}">
+                                            {{countPhotos.length}}
+                                        </md-button>
+                                        <label class="md-subhead description" href="">Фотографии</label>
+                                    </div>
+                                </md-card-title-text>
+                            </md-card-title>
+                        </div>
+                    </md-card-content>
+                </md-card>
+                <!--добавть фото-->
+                <md-card style="width:500px" layout="row">
+                    <md-button style="width:485px;height:50px" class="md-primary" ng-click=" btnLoadPhotos()">
+                        <md-icon md-svg-src="img/icons/photo.svg"></md-icon>
+                        Добавить фотографии
+                    </md-button>
+                </md-card>
+                <!--добавить пост-->
+                <md-card style="width:500px">
+                    <div layout="row" style="height:80px">
+                        <md-card-title>
+                            <md-card-title-media>
+                                <div class="md-media-sm card-media" layout style="height:50px;width:50px">
+                                    <md-button style="height:30px;width:50px" class="md-fab md-primary" md-theme="cyan" aria-label="Profile">
+                                        <div style="height:190%;width:190%;margin-left:-10px">
+                                            <img src="{{activeUserAvatarImage}}" />
+                                        </div>
+                                    </md-button>
+                                </div>
+                            </md-card-title-media>
+                        </md-card-title>
+
+                        <md-card-content>
+                            <md-input-container md-no-float style="margin-left:-320px;margin-top:20px" class="md-block">
+                                <label>Что у вас нового?</label>
+                                <input ng-model="textPost">
+
+                            </md-input-container>
+                        </md-card-content>
+
+                        <md-card-content layout="row">
+                            <md-card-title-media>
+
+                                <md-button for="file" style="height:30px;width:37px;margin-top:10px;margin-left:-30px;margin-right:-70px" class="md-fab md-primary" aria-label="Profile">
+                                    <md-tooltip md-direction="top">
+                                        Добавить фото
+                                    </md-tooltip>
+                                    <div>
+                                        <label for="file" class="mat-tab-max" style="height:400px;width:400px;margin-left:-100px">O</label>
+                                    </div>
+                                </md-button>
+
+                            </md-card-title-media>
+
+                        </md-card-content>
+                        <form>
+                            <input class="inputfile"
+                                   type="file"
+                                   name="file"
+                                   id="file"
+                                   ng-click="inputAvatar()"
+                                   ng-file-select="onFileSelect($files)"
+                                   ng-model="imageSrc"
+                                   onchange="angular.element(this).scope().rememberFile(this.files)" />
+                        </form>
+
+                        <md-card-content>
+                            <md-input-container>
+                                <md-button ng-click="addPost(textPost);getActiveUser()" style="height:30px;width:40px;margin-top:-10px;margin-left:-20px" upload-button class="md-fab btn-upload" flex md-colors="{background: 'indigo'}">
+                                    <md-tooltip md-direction="top">
+                                        Отправить
+                                    </md-tooltip>
+                                    <md-icon md-svg-src="img/icons/wondicon-ui-free-send_111204.svg">
+                                    </md-icon>
+                                </md-button>
+                            </md-input-container>
+                        </md-card-content>
+                    </div>
+                    <div layout="column">
+                        <md-button ng-show="showAvatarBall" style="height:100px;width:100px" class="md-fab md-primary" aria-label="Profile">
+                            <div style="height:220%;width:220%;margin-left:-15px">
+                                <img src="{{imageSrc}}" />
+                            </div>
+                        </md-button>
+                    </div>
+                </md-card>
+                <!--пост-->
+                <md-card style="width:500px;margin-bottom:-9px">
+                        <md-nav-bar md-no-ink-bar="disableInkBar"
+                                    md-selected-nav-item="currentNavItem"
+                                    nav-bar-aria-label="navigation links">
+                            <md-nav-item md-nav-click="goto('page1')" name="page1">
+                                <label>Мои записи </label>
+                            </md-nav-item>
+                        </md-nav-bar>
+                </md-card>
+                <md-card ng-repeat="post in myPosts" style="width:500px">
+                    <md-input-container layout="row" style="height:50px">
+                        <md-card-title-media>
+                            <div class="md-media-sm card-media" layout style="height:70px;width:70px">
+                                <md-button style="height:55px;width:70px" class="md-fab md-primary" md-theme="cyan" aria-label="Profile">
+                                    <div style="height:190%;width:190%;margin-left:-10px">
+                                        <img src="{{activeUserAvatarImage}}" />
+                                    </div>
+                                </md-button>
+                            </div>
+                        </md-card-title-media>
+
+                        <md-card-title-text style="margin-top:-5px">
+                            <h5 style="height:1px;width:200px">{{activeUser.firstname}} {{activeUser.lastname}}</h5>
+                            <label class="mat-tab-min" style="margin-bottom:-25px;margin-left:70px" href="">{{post.date | date:'MMM d HH:mm'}}</label>
+                        </md-card-title-text>
+
+                        <md-menu style="margin-left:35%;margin-right:65%">
+                            <md-button style="height:40px;width:40px" aria-label="Open phone interactions menu" class="md-icon-button" ng-click="ctrl.openMenu($mdMenu, $event)">
+                                <md-icon style="height:4px;width:4px" md-menu-origin md-svg-icon="img/icons/point.svg"></md-icon>
+                            </md-button>
+                            <md-menu-content width="4">
+                                <md-menu-item>
+                                    <md-button ng-click="">
+                                        <md-icon md-svg-icon="call:dialpad" md-menu-align-target></md-icon>
+                                        Удалить запись
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+
+                    </md-input-container>
+
+                    <md-card-title>
+                        <label class="mat-tab-average">{{post.text}}</label>
+                    </md-card-title>
+                    <md-card-title class="center" style="margin-top:-20px">
+                        <img src="{{myPostsImages[$index].avatarUrl}}" />
+                    </md-card-title>
+                    <md-divider></md-divider>
+                    <div layout="row">
+                        <md-button style="width:50px;height:50px" class="md-icon-button md-accent" aria-label="Favorite" ng-click="btnLike($index,post.postId)">
+                            <md-icon style="margin-right:30px;margin-bottom:-23px" md-svg-icon="{{likeIcons[$index]}}"></md-icon>
+                            <label style="margin-right:-30px;margin-bottom:0px">{{post.likesCounter}}</label>
+                        </md-button>
+                        <!--
+    <md-button style="width:50px;height:50px" class="md-icon-button">
+        <md-icon style="margin-right:30px;margin-bottom:-23px" md-svg-icon="img/icons/comment.svg"></md-icon>
+        <label style="margin-right:-30px;margin-bottom:0px">2</label>
+    </md-button>
+        -->
+                    </div>
+                </md-card>
+
+            </div>
+            
+        </div>
+    </div>
+
+
+
+
+        <script src="Lib/angular.min.js"></script>
+        <script src="Lib/angular-route.min.js"></script>
+        <script src="Lib/angular-animate.min.js"></script>
+        <script src="Lib/angular-aria.min.js"></script>
+        <script src="Lib/angular-messages.min.js"></script>
+        <script src="Lib/angular-material.min.js"></script>
+        <script src="MainMMC.js"></script>
+</body>
+</html>
