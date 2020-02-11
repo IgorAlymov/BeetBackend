@@ -20,23 +20,34 @@ namespace WebServerBeetCore.Controllers
         SocialUserRepository _dbUser;
         PhotoRepository _dbPhoto;
         IHostingEnvironment _appEnvironment;
+        LikePostRepository _dbLikePost;
+        CommentRepository _dbComment;
 
-        public PostController(PostRepository repPost, SocialUserRepository repUser, PhotoRepository repPhoto, IHostingEnvironment appEnvironment)
+        public PostController(PostRepository repPost,
+            SocialUserRepository repUser,
+            PhotoRepository repPhoto,
+            IHostingEnvironment appEnvironment,
+            LikePostRepository likePost,
+            CommentRepository comment)
         {
             _dbPost = repPost;
             _dbUser = repUser;
             _dbPhoto = repPhoto;
             _appEnvironment = appEnvironment;
+            _dbLikePost = likePost;
+            _dbComment = comment;
         }
-        //
-        [Route("getActiveUserPosts/{id}")]
-        public IEnumerable<Post> GetActiveUserPosts(int id)
+
+        [HttpGet("GetActiveUserPosts")]
+        public IEnumerable<Post> GetActiveUserPosts()
         {
-            var posts = _dbPost.GetUserPosts(id);
+            string emailUser = User.Identity.Name;
+            var user = _dbUser.Get(emailUser);
+            var posts = _dbPost.GetUserPosts(user.SocialUserId).ToList();
             return posts;
         }
-        //
-        [Route("getImagePosts/{id}")]
+
+        [Route("GetImagePosts/{id}")]
         public IActionResult GetImagePosts(int id)
         {
             var post = _dbPost.Get(id);
@@ -49,16 +60,20 @@ namespace WebServerBeetCore.Controllers
 
                 return Ok(new
                 {
-                    avatarUrl = Path.Combine("http://localhost:5001", avatar.Path)
+                    photoUrl = Path.Combine("http://localhost:5001", avatar.Path)
                 });
             }
             else
-                return NotFound();
+                return Ok(new
+                {
+                    photoUrl = ""
+                });
         }
-        //
-        [Route("postAddPost/{text}")]
+
+        [Route("PostAddPost/{text}")]
         public async Task<IActionResult> PostAddPost(string text, [FromForm]UploadFileModel model)
         {
+            string textPost = text.Remove(0, 1);
             string emailUser = User.Identity.Name;
             var user = _dbUser.Get(emailUser);
             try
@@ -74,16 +89,17 @@ namespace WebServerBeetCore.Controllers
                     Photo file = new Photo { Name = model.File.FileName, Path = path };
                     _dbPhoto.Create(file);
                     _dbPhoto.Save();
-                    
+
                     var post = new Post()
                     {
-                        Text = text,
+                        Text = textPost,
                         Date = DateTime.Now,
                         LikesCounter = 0
                     };
 
+                    //возможно не сработает
                     post.AttachedPhotos.Add(file);
-                    post.Author = user;
+                    post.AuthorId = user.SocialUserId;
                     _dbPost.Create(post);
                     _dbPost.Save();
                 }
@@ -91,11 +107,11 @@ namespace WebServerBeetCore.Controllers
                 {
                     var post = new Post()
                     {
-                        Text = text,
+                        Text = textPost,
                         Date = DateTime.Now,
                         LikesCounter = 0
                     };
-                    post.Author = user;
+                    post.AuthorId = user.SocialUserId;
                     _dbPost.Create(post);
                     _dbPost.Save();
                 }
@@ -106,18 +122,121 @@ namespace WebServerBeetCore.Controllers
             }
             return Ok();
         }
-        //
-        [Route("api/addLikePost/{idPost}")]
-        public async Task<IActionResult> AddLikePost(int idPost)
+
+        [Route("AddComment/{text}")]
+        public IActionResult AddComment(string text)
         {
+            string textComment = text.Remove(0, 1);
+            var postAndComment = textComment.Split(" ",2);
             string emailUser = User.Identity.Name;
             var user = _dbUser.Get(emailUser);
+            int idAvatar = (int)user.AvatarPhotoId;
+            var avatar = _dbPhoto.GetAvatar(idAvatar);
+            var comment = new Comment()
+            {
+                AuthorId = user.SocialUserId,
+                AuthorName=user.Firstname + " " + user.Lastname,
+                Date = DateTime.Now,
+                Text = postAndComment[1],
+                PostId = Int32.Parse(postAndComment[0]),
+                AvatarAuthor = Path.Combine("http://localhost:5001", avatar.Path)
+            };
+            _dbComment.Create(comment);
+            _dbComment.Save();
 
-            var post = _dbPost.Get(idPost);
-            post.LikesCounter++;
+            var post = _dbPost.Get(Int32.Parse(postAndComment[0]));
+            post.AttachedComments.Add(comment);
             _dbPost.Update(post);
             _dbPost.Save();
 
+            return Ok();
+        }
+
+        [Route("GetComment/{id}")]
+        public IEnumerable<Comment> GetComment(int id)
+        {
+            var post = _dbPost.Get(id);
+            var comments = post.AttachedComments.ToList();
+            return comments;
+        }
+
+        [Route("GetDeletePost/{id}")]
+        public IActionResult GetDeletePost(int id)
+        {
+            var post = _dbPost.Get(id);
+            _dbPost.Delete(post);
+            _dbPost.Save();
+            return Ok();
+        }
+
+        [Route("GetDeleteComment/{id}")]
+        public IActionResult GetDeleteComment(int id)
+        {
+            var comment = _dbComment.Get(id);
+            _dbComment.Delete(comment);
+            _dbComment.Save();
+            return Ok();
+        }
+
+        [Route("AddLikePost/{id}")]
+        public IActionResult AddLikePost(int id)
+        {
+            var post = _dbPost.Get(id);
+            string emailUser = User.Identity.Name;
+            var user = _dbUser.Get(emailUser);
+            var like = new LikePost()
+            {
+                PostId = post.PostId,
+                UserId = user.SocialUserId
+            };
+            _dbLikePost.Create(like);
+            _dbLikePost.Save();
+
+            post.LikePost.Add(like);
+            _dbPost.Update(post);
+            _dbPost.Save();
+            return Ok();
+        }
+
+        [Route("GetLikePost/{id}")]
+        public IActionResult GetLikePost(int id)
+        {
+            string emailUser = User.Identity.Name;
+            var user = _dbUser.Get(emailUser);
+            var post = _dbPost.Get(id);
+            var likes = post.LikePost.ToList();
+            string[] iconsLike = new string[] { "favorite_border", "favorite" };
+            string icon = "favorite_border";
+            for (int i = 0; i < likes.Count; i++)
+            {
+                if (likes[i].UserId == user.SocialUserId)
+                    icon = iconsLike[1];
+                else
+                    icon = iconsLike[0];
+            }
+            return Ok(new
+            {
+                icon = icon,
+                likesCounter = likes.Count,
+                postId = id
+            });
+        }
+
+        [Route("RemoveLikePost/{id}")]
+        public IActionResult RemoveLikePost(int id)
+        {
+            string emailUser = User.Identity.Name;
+            var user = _dbUser.Get(emailUser);
+            var post = _dbPost.Get(id);
+            var likes = post.LikePost.ToList();
+            for (int i = 0; i < likes.Count; i++)
+            {
+                if (likes[i].UserId == user.SocialUserId && likes[i].PostId==post.PostId)
+                {
+                    _dbLikePost.Delete(likes[i]);
+                    _dbLikePost.Save();
+                }
+            }
             return Ok();
         }
     }

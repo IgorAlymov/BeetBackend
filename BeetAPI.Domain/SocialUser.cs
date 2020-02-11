@@ -25,5 +25,10 @@ namespace BeetAPI.Domain
         public  ICollection<Comment> Comments { get; set; }
         public  ICollection<Message> MessageAuthor { get; set; }
         public  ICollection<Message> MessageReceiver { get; set; }
+
+        public SocialUser()
+        {
+            LikesPosts = new List<LikePost>();
+        }
     }
 }

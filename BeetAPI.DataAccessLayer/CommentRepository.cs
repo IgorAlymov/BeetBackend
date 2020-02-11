@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BeetAPI.DataAccessLayer
 {
@@ -27,7 +28,8 @@ namespace BeetAPI.DataAccessLayer
 
         public Comment Get(int id)
         {
-            return db.Comments.Find(id);
+            return db.Comments
+                .SingleOrDefault(c => c.CommentId == id);
         }
 
         public void Update(Comment comment)

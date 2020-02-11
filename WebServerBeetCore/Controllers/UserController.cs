@@ -142,6 +142,13 @@ namespace WebServerBeetCore.Controllers
             return user;
         }
 
+        [HttpGet("GetUser/{id}")]
+        public SocialUser GetUser(int id)
+        {
+            var user = _dbUser.Get(id);
+            return user;
+        }
+
         [Route("GetRemovePhoto/{text}")]
         public IActionResult GetRemovePhoto(string text)
         {

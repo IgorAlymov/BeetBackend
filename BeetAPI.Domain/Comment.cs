@@ -8,11 +8,11 @@ namespace BeetAPI.Domain
     {
         public int CommentId { get; set; }
         public string Text { get; set; }
-        public int LikesCounter { get; set; }
         public DateTime Date { get; set; }
+        public int PostId { get; set; }
+        public int AuthorId  { get; set; }
+        public string AuthorName { get; set; }
+        public string AvatarAuthor { get; set; }
 
-        public  ICollection<LikeComment> LikeComment { get; set; }
-        public  Post Post { get; set; }
-        public  SocialUser Author { get; set; }
     }
 }

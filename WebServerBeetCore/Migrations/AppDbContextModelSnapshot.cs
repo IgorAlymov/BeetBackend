@@ -25,21 +25,25 @@ namespace WebServerBeetCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AuthorSocialUserId");
+                    b.Property<int>("AuthorId");
+
+                    b.Property<string>("AuthorName");
+
+                    b.Property<string>("AvatarAuthor");
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<int>("LikesCounter");
+                    b.Property<int>("PostId");
 
-                    b.Property<int?>("PostId");
+                    b.Property<int?>("SocialUserId");
 
                     b.Property<string>("Text");
 
                     b.HasKey("CommentId");
 
-                    b.HasIndex("AuthorSocialUserId");
-
                     b.HasIndex("PostId");
+
+                    b.HasIndex("SocialUserId");
 
                     b.ToTable("Comments");
                 });
@@ -118,15 +122,17 @@ namespace WebServerBeetCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("PostId");
+                    b.Property<int>("PostId");
 
-                    b.Property<int?>("UserSocialUserId");
+                    b.Property<int?>("SocialUserId");
+
+                    b.Property<int>("UserId");
 
                     b.HasKey("LikePostId");
 
                     b.HasIndex("PostId");
 
-                    b.HasIndex("UserSocialUserId");
+                    b.HasIndex("SocialUserId");
 
                     b.ToTable("LikePosts");
                 });
@@ -187,11 +193,13 @@ namespace WebServerBeetCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AuthorSocialUserId");
+                    b.Property<int>("AuthorId");
 
                     b.Property<DateTime>("Date");
 
                     b.Property<int>("LikesCounter");
+
+                    b.Property<int?>("SocialUserId");
 
                     b.Property<string>("Text");
 
@@ -199,7 +207,7 @@ namespace WebServerBeetCore.Migrations
 
                     b.HasKey("PostId");
 
-                    b.HasIndex("AuthorSocialUserId");
+                    b.HasIndex("SocialUserId");
 
                     b.HasIndex("UserGroupForPostGroupId");
 
@@ -243,13 +251,14 @@ namespace WebServerBeetCore.Migrations
 
             modelBuilder.Entity("BeetAPI.Domain.Comment", b =>
                 {
-                    b.HasOne("BeetAPI.Domain.SocialUser", "Author")
-                        .WithMany("Comments")
-                        .HasForeignKey("AuthorSocialUserId");
-
-                    b.HasOne("BeetAPI.Domain.Post", "Post")
+                    b.HasOne("BeetAPI.Domain.Post")
                         .WithMany("AttachedComments")
-                        .HasForeignKey("PostId");
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("BeetAPI.Domain.SocialUser")
+                        .WithMany("Comments")
+                        .HasForeignKey("SocialUserId");
                 });
 
             modelBuilder.Entity("BeetAPI.Domain.FriendRelation", b =>
@@ -286,7 +295,7 @@ namespace WebServerBeetCore.Migrations
             modelBuilder.Entity("BeetAPI.Domain.LikeComment", b =>
                 {
                     b.HasOne("BeetAPI.Domain.Comment", "Comment")
-                        .WithMany("LikeComment")
+                        .WithMany()
                         .HasForeignKey("CommentId");
 
                     b.HasOne("BeetAPI.Domain.SocialUser", "User")
@@ -296,13 +305,14 @@ namespace WebServerBeetCore.Migrations
 
             modelBuilder.Entity("BeetAPI.Domain.LikePost", b =>
                 {
-                    b.HasOne("BeetAPI.Domain.Post", "Post")
+                    b.HasOne("BeetAPI.Domain.Post")
                         .WithMany("LikePost")
-                        .HasForeignKey("PostId");
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("BeetAPI.Domain.SocialUser", "User")
+                    b.HasOne("BeetAPI.Domain.SocialUser")
                         .WithMany("LikesPosts")
-                        .HasForeignKey("UserSocialUserId");
+                        .HasForeignKey("SocialUserId");
                 });
 
             modelBuilder.Entity("BeetAPI.Domain.Message", b =>
@@ -333,9 +343,9 @@ namespace WebServerBeetCore.Migrations
 
             modelBuilder.Entity("BeetAPI.Domain.Post", b =>
                 {
-                    b.HasOne("BeetAPI.Domain.SocialUser", "Author")
+                    b.HasOne("BeetAPI.Domain.SocialUser")
                         .WithMany("UserPosts")
-                        .HasForeignKey("AuthorSocialUserId");
+                        .HasForeignKey("SocialUserId");
 
                     b.HasOne("BeetAPI.Domain.Group", "UserGroupForPost")
                         .WithMany("Posts")

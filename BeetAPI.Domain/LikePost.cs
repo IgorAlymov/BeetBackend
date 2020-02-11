@@ -8,7 +8,7 @@ namespace BeetAPI.Domain
     {
         public int LikePostId { get; set; }
 
-        public  SocialUser User { get; set; }
-        public  Post Post { get; set; }
+        public  int UserId { get; set; }
+        public  int PostId { get; set; }
     }
 }
