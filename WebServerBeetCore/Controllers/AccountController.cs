@@ -74,7 +74,6 @@ namespace WebServerBeetCore.Controllers
             {
                 if (userExist == null)
                 {
-                    user.AvatarPhotoId = 83;
                     _db.Create(user);
                     _db.Save();
                     await Authenticate(user);

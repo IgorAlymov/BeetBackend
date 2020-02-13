@@ -43,7 +43,7 @@ namespace BeetAPI.DataAccessLayer
 
         public Photo GetAvatar(int idAvatar)
         {
-            return db.Photos.First(a => a.PhotoId == idAvatar);
+            return db.Photos.FirstOrDefault(a => a.PhotoId == idAvatar);
         }
 
         public void Update(Photo photo)

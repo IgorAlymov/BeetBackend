@@ -47,6 +47,13 @@ namespace WebServerBeetCore.Controllers
             return posts;
         }
 
+        [HttpGet("GetAllPosts")]
+        public IEnumerable<Post> GetAllPosts()
+        {
+            var posts = _dbPost.Get().ToList();
+            return posts;
+        }
+
         [Route("GetImagePosts/{id}")]
         public IActionResult GetImagePosts(int id)
         {
@@ -73,7 +80,11 @@ namespace WebServerBeetCore.Controllers
         [Route("PostAddPost/{text}")]
         public async Task<IActionResult> PostAddPost(string text, [FromForm]UploadFileModel model)
         {
-            string textPost = text.Remove(0, 1);
+            string textPost;
+            if (text != null)
+                textPost = text.Remove(0, 1);
+            else
+                textPost = "";
             string emailUser = User.Identity.Name;
             var user = _dbUser.Get(emailUser);
             try
@@ -97,7 +108,6 @@ namespace WebServerBeetCore.Controllers
                         LikesCounter = 0
                     };
 
-                    //возможно не сработает
                     post.AttachedPhotos.Add(file);
                     post.AuthorId = user.SocialUserId;
                     _dbPost.Create(post);
@@ -132,6 +142,11 @@ namespace WebServerBeetCore.Controllers
             var user = _dbUser.Get(emailUser);
             int idAvatar = (int)user.AvatarPhotoId;
             var avatar = _dbPhoto.GetAvatar(idAvatar);
+            if (avatar == null)
+            {
+                avatar = new Photo();
+                avatar.Path = "Files/noAvatar.png";
+            }
             var comment = new Comment()
             {
                 AuthorId = user.SocialUserId,
@@ -210,9 +225,19 @@ namespace WebServerBeetCore.Controllers
             for (int i = 0; i < likes.Count; i++)
             {
                 if (likes[i].UserId == user.SocialUserId)
+                {
                     icon = iconsLike[1];
+                    return Ok(new
+                    {
+                        icon = icon,
+                        likesCounter = likes.Count,
+                        postId = id
+                    });
+                }
                 else
+                {
                     icon = iconsLike[0];
+                }
             }
             return Ok(new
             {

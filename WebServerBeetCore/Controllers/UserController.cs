@@ -45,12 +45,34 @@ namespace WebServerBeetCore.Controllers
 
             int idAvatar = (int)user.AvatarPhotoId;
             var avatar = _dbPhoto.GetAvatar(idAvatar);
-
+            if (avatar == null)
+            {
+                avatar = new Photo();
+                avatar.Path = "Files/noAvatar.png";
+            }
             return Ok(new {
                 avatarUrl = Path.Combine("http://localhost:5001", avatar.Path)
             });
         }
-        
+
+        [Route("GetUserAvatar/{id}")]
+        public IActionResult GetUserAvatar(int id)
+        {
+            var user = _dbUser.Get(id);
+            if (user == null) return NotFound();
+            int idAvatar = (int)user.AvatarPhotoId;
+            var avatar = _dbPhoto.GetAvatar(idAvatar);
+            if (avatar == null)
+            {
+                avatar = new Photo();
+                avatar.Path = "Files/noAvatar.png";
+            }
+            return Ok(new
+            {
+                avatarUrl = Path.Combine("http://localhost:5001", avatar.Path)
+            });
+        }
+
         [Route("GetAllUserPhoto")]
         public IActionResult GetAllUserPhoto()
         {
