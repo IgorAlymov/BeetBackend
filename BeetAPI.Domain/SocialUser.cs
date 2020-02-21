@@ -29,6 +29,12 @@ namespace BeetAPI.Domain
         public SocialUser()
         {
             LikesPosts = new List<LikePost>();
+            UserPhotos = new List<Photo>();
+            UserPosts = new List<Post>();
+            LikesComments = new List<LikeComment>();
+            Comments = new List<Comment>();
+            MessageAuthor = new List<Message>();
+            MessageReceiver=new List<Message>();
         }
     }
 }

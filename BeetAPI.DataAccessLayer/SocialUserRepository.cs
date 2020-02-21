@@ -30,6 +30,18 @@ namespace BeetAPI.DataAccessLayer
         {
             return db.SocialUsers.Find(id);
         }
+        /*
+        public SocialUser GetForChange(int id)
+        {
+            return db.SocialUsers.Include(l => l.LikesPosts)
+                .Include(l => l.UserPhotos)
+                .Include(l => l.UserPosts)
+                .Include(l => l.LikesComments)
+                .Include(l => l.Comments)
+                .Include(l => l.MessageAuthor)
+                .Include(l => l.MessageReceiver)
+                .SingleOrDefault(a => a.SocialUserId == id);
+        }*/
 
         public  SocialUser Get(string email)
         {

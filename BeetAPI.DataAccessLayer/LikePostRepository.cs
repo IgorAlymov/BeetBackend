@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace BeetAPI.DataAccessLayer
@@ -23,6 +24,12 @@ namespace BeetAPI.DataAccessLayer
         public IEnumerable<LikePost> Get()
         {
             return db.LikePosts;
+        }
+
+        public IEnumerable<LikePost> GetLikeSUser(int idUser)
+        {
+            var likes = db.LikePosts.Where(a => a.UserId == idUser);
+            return likes;
         }
 
         public LikePost Get(int id)

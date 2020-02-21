@@ -87,6 +87,5 @@ namespace WebServerBeetCore.Controllers
                 return BadRequest(e);
             }
         }
-
     }
 }

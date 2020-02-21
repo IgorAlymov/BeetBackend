@@ -28,6 +28,14 @@ namespace WebServerBeetCore.Controllers
         }
 
         //
+        [Route("getallusers/{id}")]
+        public IEnumerable<SocialUser> GetAllUsers(int id)
+        {
+            var users = _dbUser.Get().ToList();
+            var allUser = users.Where(a => a.SocialUserId != id);
+            return allUser;
+        }
+        //
         [Route("GetRemoveFriend/{id}")]
         public IActionResult GetRemoveFriend(int id)
         {

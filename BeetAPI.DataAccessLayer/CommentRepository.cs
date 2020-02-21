@@ -25,6 +25,11 @@ namespace BeetAPI.DataAccessLayer
         {
             return db.Comments;
         }
+        public IEnumerable<Comment> GetUserComments(int idUser)
+        {
+            var comments = db.Comments.Where(a=>a.AuthorId==idUser);
+            return comments;
+        }
 
         public Comment Get(int id)
         {

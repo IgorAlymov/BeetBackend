@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using BeetAPI.DataAccessLayer;
 using BeetAPI.Domain;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,23 +20,21 @@ namespace WebServerBeetCore.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        PostRepository _dbPost;
         SocialUserRepository _dbUser;
         PhotoRepository _dbPhoto;
         IHostingEnvironment _appEnvironment;
+        CommentRepository _dbComment;
+        LikePostRepository _dbLikePost;
 
-        public UserController(SocialUserRepository rep, PhotoRepository repPhoto, IHostingEnvironment appEnvironment)
+        public UserController(LikePostRepository likePost, CommentRepository comment, PostRepository repPost, SocialUserRepository rep, PhotoRepository repPhoto, IHostingEnvironment appEnvironment)
         {
             _dbUser = rep;
             _dbPhoto = repPhoto;
             _appEnvironment = appEnvironment;
-        }
-        //
-        [Route("getallusers/{id}")]
-        public IEnumerable<SocialUser> GetAllUsers(int id)
-        {
-            var users = _dbUser.Get().ToList();
-            var allUser = users.Where(a => a.SocialUserId != id);
-            return allUser;
+            _dbPost = repPost;
+            _dbComment = comment;
+            _dbLikePost = likePost;
         }
         
         [Route("GetUserAvatar")]
@@ -42,14 +43,13 @@ namespace WebServerBeetCore.Controllers
             string emailUser = User.Identity.Name;
             var user = _dbUser.Get(emailUser);
             if (user == null) return NotFound();
-
-            int idAvatar = (int)user.AvatarPhotoId;
-            var avatar = _dbPhoto.GetAvatar(idAvatar);
-            if (avatar == null)
+            var avatar = new Photo();
+            if (user.AvatarPhotoId == null)
             {
-                avatar = new Photo();
                 avatar.Path = "Files/noAvatar.png";
             }
+            else
+                avatar = _dbPhoto.GetAvatar((int)user.AvatarPhotoId);
             return Ok(new {
                 avatarUrl = Path.Combine("http://localhost:5001", avatar.Path)
             });
@@ -179,6 +179,71 @@ namespace WebServerBeetCore.Controllers
             _dbPhoto.Delete(photoRemove);
             _dbPhoto.Save();
             return Ok();
+        }
+
+        [HttpPost("ChangeSave")]
+        public async Task<IActionResult> ChangeSave(SocialUser user)
+        {
+            var userExist = _dbUser.Get(user.SocialUserId);
+            if (userExist.Firstname != user.Firstname)
+                userExist.Firstname = user.Firstname;
+            if (userExist.Lastname != user.Lastname)
+                userExist.Lastname = user.Lastname;
+            if (userExist.Birthday != user.Birthday)
+                userExist.Birthday = user.Birthday;
+            if (userExist.City != user.City)
+                userExist.City = user.City;
+            if (userExist.PhoneNumber != user.PhoneNumber)
+                userExist.PhoneNumber = user.PhoneNumber;
+            if (userExist.Gender != user.Gender)
+                userExist.Gender = user.Gender;
+            try
+            {
+                if (userExist != null)
+                {
+                    _dbUser.Update(userExist);
+                    _dbUser.Save();
+                    return Ok();
+                }
+                else
+                    return BadRequest("User not exist");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+        [Route("DeletePage")]
+        public async Task<ActionResult> DeletePageAsync()
+        {
+            string emailUser = User.Identity.Name;
+            var user = _dbUser.Get(emailUser);
+            var photos = _dbPhoto.GetPhotosUser(user.SocialUserId);
+            foreach (var item in photos)
+            {
+                _dbPhoto.Delete(item);
+            }
+            var posts = _dbPost.GetUserPosts(user.SocialUserId).ToList();
+            foreach (var item in posts)
+            {
+                _dbPost.Delete(item);
+            }
+            var comments = _dbComment.GetUserComments(user.SocialUserId).ToList();
+            foreach (var item in comments)
+            {
+                _dbComment.Delete(item);
+            }
+            var likes = _dbLikePost.GetLikeSUser(user.SocialUserId).ToList();
+            foreach (var item in likes)
+            {
+                _dbLikePost.Delete(item);
+            }
+            _dbUser.Delete(user.SocialUserId);
+            _dbUser.Save();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            return Ok();
+            //ЕЩЁ ДОДЕЛАТЬ
         }
     }
 }
