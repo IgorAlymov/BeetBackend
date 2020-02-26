@@ -60,13 +60,14 @@ namespace WebServerBeetCore.Controllers
         {
             var user = _dbUser.Get(id);
             if (user == null) return NotFound();
-            int idAvatar = (int)user.AvatarPhotoId;
-            var avatar = _dbPhoto.GetAvatar(idAvatar);
-            if (avatar == null)
+
+            var avatar = new Photo();
+            if (user.AvatarPhotoId == null)
             {
-                avatar = new Photo();
                 avatar.Path = "Files/noAvatar.png";
             }
+            else
+                avatar = _dbPhoto.GetAvatar((int)user.AvatarPhotoId);
             return Ok(new
             {
                 avatarUrl = Path.Combine("http://localhost:5001", avatar.Path)

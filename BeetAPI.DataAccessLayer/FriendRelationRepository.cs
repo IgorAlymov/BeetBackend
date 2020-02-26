@@ -28,10 +28,30 @@ namespace BeetAPI.DataAccessLayer
             db.FriendRelations.Add(friends);
         }
 
-        public IEnumerable<SocialUser> Get(int id)
+        public IEnumerable<SocialUser> GetSubscribersFriend(int id)
         {
             List<SocialUser> friends = new List<SocialUser>();
-            var friendRelation = db.FriendRelations.Where(f => f.UserIdAdding == id || f.UserIdAdded==id).ToList();
+            var friendRelation = db.FriendRelations.Where(f => f.UserIdAdded == id).ToList();
+            foreach (var item in friendRelation)
+            {
+                if (id != item.UserIdAdded)
+                {
+                    var friend = db.SocialUsers.Find(item.UserIdAdded);
+                    friends.Add(friend);
+                }
+                else
+                {
+                    var friend = db.SocialUsers.Find(item.UserIdAdding);
+                    friends.Add(friend);
+                }
+            }
+            return friends;
+        }
+
+        public IEnumerable<SocialUser> GetSubscription(int id)
+        {
+            List<SocialUser> friends = new List<SocialUser>();
+            var friendRelation = db.FriendRelations.Where(f => f.UserIdAdding == id).ToList();
             foreach (var item in friendRelation)
             {
                 if (id != item.UserIdAdded)
@@ -56,7 +76,7 @@ namespace BeetAPI.DataAccessLayer
         public void Delete(int idRemoveFriend)
         {
             var friendRemove = db.FriendRelations
-                .Where(f => f.UserIdAdded == idRemoveFriend || f.UserIdAdding== idRemoveFriend)
+                .Where(f => f.UserIdAdded == idRemoveFriend)
                 .ToList();
             if (friendRemove != null)
                 db.FriendRelations.Remove(friendRemove[0]);
