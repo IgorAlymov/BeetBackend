@@ -25,10 +25,20 @@ namespace BeetAPI.DataAccessLayer
         {
             return db.UserGroups;
         }
-
         public Group Get(int id)
         {
-            return db.UserGroups.Where(g=>g.GroupId == id).FirstOrDefault();
+            return db.UserGroups.Where(g=>g.GroupId == id)
+                .FirstOrDefault();
+        }
+        public Group GetPosts(int id)
+        {
+            return db.UserGroups.Where(g => g.GroupId == id)
+                .Include(p => p.Posts)
+                .FirstOrDefault();
+        }
+        public Group GetMyGroup(int idUser)
+        {
+            return db.UserGroups.Where(g => g.AuthorId == idUser).FirstOrDefault();
         }
 
         public Group Get(string name)

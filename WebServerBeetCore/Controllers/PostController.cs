@@ -50,7 +50,7 @@ namespace WebServerBeetCore.Controllers
         [HttpGet("GetAllPosts")]
         public IEnumerable<Post> GetAllPosts()
         {
-            var posts = _dbPost.Get().ToList();
+            var posts = _dbPost.GetUsersPosts().ToList();
             return posts;
         }
 
@@ -105,7 +105,8 @@ namespace WebServerBeetCore.Controllers
                     {
                         Text = textPost,
                         Date = DateTime.Now,
-                        LikesCounter = 0
+                        LikesCounter = 0,
+                        UserGroupForPost=null
                     };
 
                     post.AttachedPhotos.Add(file);
@@ -119,7 +120,8 @@ namespace WebServerBeetCore.Controllers
                     {
                         Text = textPost,
                         Date = DateTime.Now,
-                        LikesCounter = 0
+                        LikesCounter = 0,
+                        UserGroupForPost = null
                     };
                     post.AuthorId = user.SocialUserId;
                     _dbPost.Create(post);

@@ -55,12 +55,12 @@ namespace BeetAPI.DataAccessLayer
             db.Entry(groupRelation).State = EntityState.Modified;
         }
 
-        public void Delete(int idRemoveGroup)
+        public void Delete(int idRemoveGroup,int idSub)
         {
             var groupRemove = db.GroupRelations
-                .Where(f => f.GroupId == idRemoveGroup || f.GroupId == idRemoveGroup)
+                .Where(f => f.GroupId == idRemoveGroup && f.UserId==idSub)
                 .ToList();
-            if (groupRemove != null)
+            if (groupRemove[0] != null)
                 db.GroupRelations.Remove(groupRemove[0]);
         }
 

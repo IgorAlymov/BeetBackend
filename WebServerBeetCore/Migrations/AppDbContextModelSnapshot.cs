@@ -73,6 +73,8 @@ namespace WebServerBeetCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AuthorId");
+
                     b.Property<int?>("CoverPhotoId");
 
                     b.Property<string>("Name");

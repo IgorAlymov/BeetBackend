@@ -8,7 +8,7 @@ namespace BeetAPI.Domain
     {
         public int GroupId { get; set; }
         public string Name { get; set; }
-
+        public int AuthorId { get; set; }
         public  Photo Cover { get; set; }
         public  ICollection<SocialUser> UsersForGroup { get; set; }
         public  ICollection<Post> Posts { get; set; }
@@ -16,6 +16,7 @@ namespace BeetAPI.Domain
         public Group()
         {
             UsersForGroup = new List<SocialUser>();
+            Posts = new List<Post>();
         }
     }
 }

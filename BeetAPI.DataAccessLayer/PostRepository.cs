@@ -26,6 +26,11 @@ namespace BeetAPI.DataAccessLayer
             return db.Posts;
         }
 
+        public IEnumerable<Post> GetUsersPosts()
+        {
+            return db.Posts.Where(p => p.UserGroupForPost == null);
+        }
+
         public Post Get(int id)
         {
             return db.Posts
@@ -45,6 +50,10 @@ namespace BeetAPI.DataAccessLayer
                 posts.Add(allPostUser[i]);
             }
             return posts;
+        }
+        public IEnumerable<Post> GetAllGroupPosts()
+        {
+            return db.Posts.Where(p => p.UserGroupForPost != null).Include(g => g.UserGroupForPost).ToList();
         }
 
         public void Update(Post post)
