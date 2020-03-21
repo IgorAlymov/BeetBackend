@@ -18,6 +18,7 @@ namespace BeetAPI.DataAccessLayer
         public DbSet<Group> UserGroups { get; set; }
         public DbSet<FriendRelation> FriendRelations { get; set; }
         public DbSet<GroupRelation> GroupRelations { get; set; }
+        public DbSet<Dialog> Dialogs { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
@@ -25,12 +26,12 @@ namespace BeetAPI.DataAccessLayer
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<SocialUser>()
+           /* modelBuilder.Entity<SocialUser>()
                 .HasMany(e => e.MessageAuthor)
                 .WithOne(f => f.Author);
             modelBuilder.Entity<SocialUser>()
                 .HasMany(e => e.MessageReceiver)
-                .WithOne(f => f.Receiver);
+                .WithOne(f => f.Receiver);*/
             modelBuilder.Entity<FriendRelation>()
                 .HasKey(k=> new { k.UserIdAdding , k.UserIdAdded});
             modelBuilder.Entity<GroupRelation>()

@@ -48,6 +48,33 @@ namespace WebServerBeetCore.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("BeetAPI.Domain.Dialog", b =>
+                {
+                    b.Property<int>("DialogId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Author");
+
+                    b.Property<string>("Avatar");
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<string>("LastMessage");
+
+                    b.Property<string>("Name");
+
+                    b.Property<bool>("ReadAuthor");
+
+                    b.Property<bool>("ReadReciver");
+
+                    b.Property<int>("Reciver");
+
+                    b.HasKey("DialogId");
+
+                    b.ToTable("Dialogs");
+                });
+
             modelBuilder.Entity("BeetAPI.Domain.FriendRelation", b =>
                 {
                     b.Property<int>("UserIdAdding");
@@ -145,19 +172,31 @@ namespace WebServerBeetCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AuthorSocialUserId");
+                    b.Property<int>("Author");
 
-                    b.Property<int?>("ReceiverSocialUserId");
+                    b.Property<string>("Avatar");
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<int?>("DialogId");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("Reciver");
+
+                    b.Property<int?>("SocialUserId");
+
+                    b.Property<int?>("SocialUserId1");
 
                     b.Property<string>("Text");
 
-                    b.Property<bool>("WasReaded");
-
                     b.HasKey("MessageId");
 
-                    b.HasIndex("AuthorSocialUserId");
+                    b.HasIndex("DialogId");
 
-                    b.HasIndex("ReceiverSocialUserId");
+                    b.HasIndex("SocialUserId");
+
+                    b.HasIndex("SocialUserId1");
 
                     b.ToTable("Messages");
                 });
@@ -319,19 +358,23 @@ namespace WebServerBeetCore.Migrations
 
             modelBuilder.Entity("BeetAPI.Domain.Message", b =>
                 {
-                    b.HasOne("BeetAPI.Domain.SocialUser", "Author")
-                        .WithMany("MessageAuthor")
-                        .HasForeignKey("AuthorSocialUserId");
+                    b.HasOne("BeetAPI.Domain.Dialog")
+                        .WithMany("Messages")
+                        .HasForeignKey("DialogId");
 
-                    b.HasOne("BeetAPI.Domain.SocialUser", "Receiver")
+                    b.HasOne("BeetAPI.Domain.SocialUser")
+                        .WithMany("MessageAuthor")
+                        .HasForeignKey("SocialUserId");
+
+                    b.HasOne("BeetAPI.Domain.SocialUser")
                         .WithMany("MessageReceiver")
-                        .HasForeignKey("ReceiverSocialUserId");
+                        .HasForeignKey("SocialUserId1");
                 });
 
             modelBuilder.Entity("BeetAPI.Domain.Photo", b =>
                 {
                     b.HasOne("BeetAPI.Domain.Message", "Message")
-                        .WithMany("AttachedPhoto")
+                        .WithMany()
                         .HasForeignKey("MessageId");
 
                     b.HasOne("BeetAPI.Domain.SocialUser", "PhotoUsers")

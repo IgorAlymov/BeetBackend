@@ -1,20 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebServerSocialNet", "WebServerSocialNet\WebServerSocialNet.csproj", "{34A552D3-B9C3-4933-80E4-E575E9343A97}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LayoutSoc", "LayoutSoc\LayoutSoc.csproj", "{172C45FD-2081-424A-BD56-1AB2FA754117}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeetAPI.Domain", "BeetAPI.Domain\BeetAPI.Domain.csproj", "{C97AED1E-06F8-4C81-88ED-89929EB7CD49}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeetAPI.DataAccessLayer", "BeetAPI.DataAccessLayer\BeetAPI.DataAccessLayer.csproj", "{EDAE6933-E7F0-4735-8F05-9326A3D00C07}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebServerBeetCore", "WebServerBeetCore\WebServerBeetCore.csproj", "{B3B7E0EA-4736-4501-BDFB-C7403D1F3AB4}"
-	ProjectSection(ProjectDependencies) = postProject
-		{172C45FD-2081-424A-BD56-1AB2FA754117} = {172C45FD-2081-424A-BD56-1AB2FA754117}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,10 +21,6 @@ Global
 		{34A552D3-B9C3-4933-80E4-E575E9343A97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34A552D3-B9C3-4933-80E4-E575E9343A97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34A552D3-B9C3-4933-80E4-E575E9343A97}.Release|Any CPU.Build.0 = Release|Any CPU
-		{172C45FD-2081-424A-BD56-1AB2FA754117}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{172C45FD-2081-424A-BD56-1AB2FA754117}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{172C45FD-2081-424A-BD56-1AB2FA754117}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{172C45FD-2081-424A-BD56-1AB2FA754117}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C97AED1E-06F8-4C81-88ED-89929EB7CD49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C97AED1E-06F8-4C81-88ED-89929EB7CD49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C97AED1E-06F8-4C81-88ED-89929EB7CD49}.Release|Any CPU.ActiveCfg = Release|Any CPU

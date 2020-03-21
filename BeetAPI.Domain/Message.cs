@@ -7,11 +7,12 @@ namespace BeetAPI.Domain
     public class Message
     {
         public int MessageId { get; set; }
+        public int? DialogId { get; set; }
+        public DateTime Date { get; set; }
+        public int Author { get; set; }
+        public int Reciver { get; set; }
         public string Text { get; set; }
-        public bool WasReaded { get; set; }
-
-        public  ICollection<Photo> AttachedPhoto { get; set; }
-        public  SocialUser Author { get; set; }
-        public  SocialUser Receiver { get; set; }
+        public string Name { get; set; }
+        public string Avatar { get; set; }
     }
 }

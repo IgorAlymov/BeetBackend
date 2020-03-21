@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using WebServerBeetCore.SignalR;
 
 namespace WebServerBeetCore
 {
@@ -23,12 +24,11 @@ namespace WebServerBeetCore
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-
+            
         }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
@@ -53,21 +53,22 @@ namespace WebServerBeetCore
             services.AddTransient<UserGroupRepository>();
             services.AddTransient<FriendRelationRepository>();
             services.AddTransient<GroupRelationRepository>();
+            services.AddTransient<DialogRepository>();
 
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy( builder => builder.AllowAnyOrigin()
                                                                 .AllowAnyHeader()
                                                                 .AllowAnyMethod()
-                                                                .AllowCredentials());
+                                                                .AllowCredentials()
+                                                                .WithOrigins("http://localhost:4200"));
             });
+            services.AddSignalR();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseCors();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -77,12 +78,12 @@ namespace WebServerBeetCore
                 
                 app.UseHsts();
             }
-
-            //app.UseHttpsRedirection();
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("/chat");
+            });
             app.UseStaticFiles();
-
             app.UseAuthentication();
-            
             app.UseMvc();
         }
     }
