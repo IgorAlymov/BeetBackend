@@ -290,6 +290,29 @@ namespace WebServerBeetCore.Migrations
                     b.ToTable("SocialUsers");
                 });
 
+            modelBuilder.Entity("BeetAPI.Domain.Video", b =>
+                {
+                    b.Property<int>("VideoId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Path");
+
+                    b.Property<int?>("VideoUserSocialUserId");
+
+                    b.Property<int>("ViewCounter");
+
+                    b.HasKey("VideoId");
+
+                    b.HasIndex("VideoUserSocialUserId");
+
+                    b.ToTable("Videos");
+                });
+
             modelBuilder.Entity("BeetAPI.Domain.Comment", b =>
                 {
                     b.HasOne("BeetAPI.Domain.Post")
@@ -402,6 +425,13 @@ namespace WebServerBeetCore.Migrations
                     b.HasOne("BeetAPI.Domain.Group")
                         .WithMany("UsersForGroup")
                         .HasForeignKey("GroupId");
+                });
+
+            modelBuilder.Entity("BeetAPI.Domain.Video", b =>
+                {
+                    b.HasOne("BeetAPI.Domain.SocialUser", "VideoUser")
+                        .WithMany()
+                        .HasForeignKey("VideoUserSocialUserId");
                 });
 #pragma warning restore 612, 618
         }

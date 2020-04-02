@@ -19,6 +19,7 @@ namespace BeetAPI.DataAccessLayer
         public DbSet<FriendRelation> FriendRelations { get; set; }
         public DbSet<GroupRelation> GroupRelations { get; set; }
         public DbSet<Dialog> Dialogs { get; set; }
+        public DbSet<Video> Videos { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)

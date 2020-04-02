@@ -84,7 +84,7 @@ namespace WebServerBeetCore.Controllers
             if (!ModelState.IsValid) return BadRequest();
             try
             {
-                string path = Path.Combine("Files", uploadedFile.File.FileName);
+                string path = Path.Combine("Photos", uploadedFile.File.FileName);
                 using (var fileStream = new FileStream(Path.Combine(_appEnvironment.WebRootPath, path), FileMode.Create))
                 {
                     await uploadedFile.File.CopyToAsync(fileStream);
@@ -192,7 +192,7 @@ namespace WebServerBeetCore.Controllers
             {
                 if (model.File != null)
                 {
-                    string path = Path.Combine("Files", model.File.FileName);
+                    string path = Path.Combine("Photos", model.File.FileName);
                     using (var fileStream = new FileStream(Path.Combine(_appEnvironment.WebRootPath, path), FileMode.Create))
                     {
                         await model.File.CopyToAsync(fileStream);

@@ -43,13 +43,22 @@ namespace WebServerBeetCore.Controllers
             string emailUser = User.Identity.Name;
             var user = _dbUser.Get(emailUser);
             if (user == null) return NotFound();
-            var avatar = new Photo();
+            Photo avatar = new Photo();
             if (user.AvatarPhotoId == null)
             {
-                avatar.Path = "Files/noAvatar.png";
+                avatar.Path = "Photos/noAvatar.png";
             }
             else
+            {
                 avatar = _dbPhoto.GetAvatar((int)user.AvatarPhotoId);
+                if(avatar==null)
+                {
+                    avatar = new Photo();
+                    avatar.Path = "Photos/noAvatar.png";
+                }
+                    
+            }
+                
             return Ok(new {
                 avatarUrl = Path.Combine("http://localhost:5001", avatar.Path)
             });
@@ -61,13 +70,21 @@ namespace WebServerBeetCore.Controllers
             var user = _dbUser.Get(id);
             if (user == null) return NotFound();
 
-            var avatar = new Photo();
+            Photo avatar = new Photo();
             if (user.AvatarPhotoId == null)
             {
-                avatar.Path = "Files/noAvatar.png";
+                avatar.Path = "Photos/noAvatar.png";
             }
             else
+            {
                 avatar = _dbPhoto.GetAvatar((int)user.AvatarPhotoId);
+                if (avatar == null)
+                {
+                    avatar = new Photo();
+                    avatar.Path = "Photos/noAvatar.png";
+                }
+                    
+            }
             return Ok(new
             {
                 avatarUrl = Path.Combine("http://localhost:5001", avatar.Path)
@@ -104,7 +121,7 @@ namespace WebServerBeetCore.Controllers
             var lastUser = _dbUser.Get(emailUser);
             try
             {
-                string path = Path.Combine("Files", model.File.FileName);
+                string path = Path.Combine("Photos", model.File.FileName);
                 using (var fileStream = new FileStream(Path.Combine(_appEnvironment.WebRootPath, path), FileMode.Create))
                 {
                     await model.File.CopyToAsync(fileStream);
@@ -136,10 +153,11 @@ namespace WebServerBeetCore.Controllers
             var lastUser = _dbUser.Get(emailUser);
             try
             {
-                string path = Path.Combine("Files", model.File.FileName);
+                string path = Path.Combine("Photos", model.File.FileName);
                 using (var fileStream = new FileStream(Path.Combine(_appEnvironment.WebRootPath, path), FileMode.Create))
                 {
                     await model.File.CopyToAsync(fileStream);
+                    fileStream.Close();
                 }
 
                 Photo file = new Photo { Name = model.File.FileName, Path = path };

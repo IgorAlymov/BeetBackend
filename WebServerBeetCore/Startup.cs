@@ -7,6 +7,7 @@ using BeetAPI.DataAccessLayer;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Cors.Internal;
@@ -24,7 +25,6 @@ namespace WebServerBeetCore
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            
         }
 
         public IConfiguration Configuration { get; }
@@ -40,6 +40,10 @@ namespace WebServerBeetCore
                 {
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
                 });
+            services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 400000000;
+            });
 
             services.AddMvc();
 
@@ -54,6 +58,7 @@ namespace WebServerBeetCore
             services.AddTransient<FriendRelationRepository>();
             services.AddTransient<GroupRelationRepository>();
             services.AddTransient<DialogRepository>();
+            services.AddTransient<VideoRepository>();
 
             services.AddCors(options =>
             {

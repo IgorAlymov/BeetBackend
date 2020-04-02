@@ -91,7 +91,7 @@ namespace WebServerBeetCore.Controllers
             {
                 if (model.File != null)
                 {
-                    string path = Path.Combine("Files", model.File.FileName);
+                    string path = Path.Combine("Photos", model.File.FileName);
                     using (var fileStream = new FileStream(Path.Combine(_appEnvironment.WebRootPath, path), FileMode.Create))
                     {
                         await model.File.CopyToAsync(fileStream);
@@ -147,7 +147,7 @@ namespace WebServerBeetCore.Controllers
             if (avatar == null)
             {
                 avatar = new Photo();
-                avatar.Path = "Files/noAvatar.png";
+                avatar.Path = "Photos/noAvatar.png";
             }
             var comment = new Comment()
             {

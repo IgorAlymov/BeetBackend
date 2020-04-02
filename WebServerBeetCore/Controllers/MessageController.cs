@@ -36,10 +36,17 @@ namespace WebServerBeetCore.Controllers
             var avatarAuthor = new Photo();
             if (author.AvatarPhotoId == null)
             {
-                avatarAuthor.Path = "Files/noAvatar.png";
+                avatarAuthor.Path = "Photos/noAvatar.png";
             }
             else
+            {
                 avatarAuthor = _dbPhoto.GetAvatar((int)author.AvatarPhotoId);
+                if (avatarAuthor == null)
+                {
+                    avatarAuthor = new Photo();
+                    avatarAuthor.Path = "Photos/noAvatar.png";
+                }
+            }
             var dialogActive = _dbDialog.GetActiveDialog(message.Author, message.Reciver);
             if (dialogActive == null)
             {
