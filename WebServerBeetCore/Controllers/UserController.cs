@@ -205,7 +205,7 @@ namespace WebServerBeetCore.Controllers
         {
             var userExist = _dbUser.Get(user.SocialUserId);
             if (userExist.Firstname != user.Firstname)
-                userExist.Firstname = user.Firstname;
+                userExist.Firstname = user.Firstname ; 
             if (userExist.Lastname != user.Lastname)
                 userExist.Lastname = user.Lastname;
             if (userExist.Birthday != user.Birthday)
