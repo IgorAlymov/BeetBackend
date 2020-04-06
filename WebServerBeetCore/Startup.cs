@@ -59,6 +59,7 @@ namespace WebServerBeetCore
             services.AddTransient<GroupRelationRepository>();
             services.AddTransient<DialogRepository>();
             services.AddTransient<VideoRepository>();
+            services.AddTransient<MusicRepository>();
 
             services.AddCors(options =>
             {

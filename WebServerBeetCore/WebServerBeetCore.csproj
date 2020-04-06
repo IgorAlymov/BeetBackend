@@ -16,6 +16,7 @@
   <ItemGroup>
     <Folder Include="AppData\" />
     <Folder Include="wwwroot\Videos\" />
+    <Folder Include="wwwroot\Music\" />
   </ItemGroup>
 
   <ItemGroup>

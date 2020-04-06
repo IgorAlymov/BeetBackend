@@ -201,6 +201,25 @@ namespace WebServerBeetCore.Migrations
                     b.ToTable("Messages");
                 });
 
+            modelBuilder.Entity("BeetAPI.Domain.Music", b =>
+                {
+                    b.Property<int>("MusicId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("MusicUserSocialUserId");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Path");
+
+                    b.HasKey("MusicId");
+
+                    b.HasIndex("MusicUserSocialUserId");
+
+                    b.ToTable("Musics");
+                });
+
             modelBuilder.Entity("BeetAPI.Domain.Photo", b =>
                 {
                     b.Property<int>("PhotoId")
@@ -392,6 +411,13 @@ namespace WebServerBeetCore.Migrations
                     b.HasOne("BeetAPI.Domain.SocialUser")
                         .WithMany("MessageReceiver")
                         .HasForeignKey("SocialUserId1");
+                });
+
+            modelBuilder.Entity("BeetAPI.Domain.Music", b =>
+                {
+                    b.HasOne("BeetAPI.Domain.SocialUser", "MusicUser")
+                        .WithMany()
+                        .HasForeignKey("MusicUserSocialUserId");
                 });
 
             modelBuilder.Entity("BeetAPI.Domain.Photo", b =>
