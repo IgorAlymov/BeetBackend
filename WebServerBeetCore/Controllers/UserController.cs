@@ -83,7 +83,6 @@ namespace WebServerBeetCore.Controllers
                     avatar = new Photo();
                     avatar.Path = "Photos/noAvatar.png";
                 }
-                    
             }
             return Ok(new
             {
@@ -262,7 +261,6 @@ namespace WebServerBeetCore.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             return Ok();
-            //ЕЩЁ ДОДЕЛАТЬ
         }
     }
 }

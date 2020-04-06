@@ -58,8 +58,6 @@ namespace BeetAPI.DataAccessLayer
                     groups.Add(group);
             }
             return groups;
-
-            //return db.UserGroups.Where(g=>g.UsersForGroup.Any(user=>user.SocialUserId==id));
         }
 
         public void Update(Group userGroup)
