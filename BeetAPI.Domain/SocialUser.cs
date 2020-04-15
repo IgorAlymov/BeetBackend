@@ -17,6 +17,7 @@ namespace BeetAPI.Domain
         public string PhoneNumber { get; set; }
         public string AboutMe { get; set; }
         public string City { get; set; }
+        public byte[] Salt { get; set; }
 
         public  ICollection<Photo> UserPhotos { get; set; }
         public  ICollection<Post> UserPosts { get; set; }

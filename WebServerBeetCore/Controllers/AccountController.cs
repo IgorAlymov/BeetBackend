@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace WebServerBeetCore.Controllers
 {
@@ -32,7 +34,13 @@ namespace WebServerBeetCore.Controllers
             var entryUser =  _db.Get(user.Email);
             try
             {
-                if (entryUser != null && entryUser.Password == user.Password)
+                string hashedIncoming = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                    password: user.Password,
+                    salt: entryUser.Salt,
+                    prf: KeyDerivationPrf.HMACSHA1,
+                    iterationCount: 10000,
+                    numBytesRequested: 256 / 8));
+                if (entryUser != null && hashedIncoming == entryUser.Password)
                 {
                     await Authenticate(user);
                     return Ok();
@@ -72,6 +80,19 @@ namespace WebServerBeetCore.Controllers
             var userExist = _db.Get(user.Email);
             try
             {
+                byte[] salt = new byte[128 / 8];
+                using (var rng = RandomNumberGenerator.Create())
+                {
+                    rng.GetBytes(salt);
+                }
+                string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                    password: user.Password,
+                    salt: salt,
+                    prf: KeyDerivationPrf.HMACSHA1,
+                    iterationCount: 10000,
+                    numBytesRequested: 256 / 8));
+                user.Password = hashed;
+                user.Salt = salt;
                 if (userExist == null)
                 {
                     _db.Create(user);

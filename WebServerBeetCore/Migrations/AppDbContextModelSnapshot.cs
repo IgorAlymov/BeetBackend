@@ -302,6 +302,8 @@ namespace WebServerBeetCore.Migrations
 
                     b.Property<string>("PhoneNumber");
 
+                    b.Property<byte[]>("Salt");
+
                     b.HasKey("SocialUserId");
 
                     b.HasIndex("GroupId");
